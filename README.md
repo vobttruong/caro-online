@@ -1,48 +1,25 @@
-# Caro Club
+# Caro Club — GitHub Pages
 
-Game caro tiếng Việt, giao diện thích ứng điện thoại và máy tính. Không cần thư viện ngoài.
+Game caro tiếng Việt: đấu máy, hai người cùng thiết bị, hai người online qua mã phòng. Bàn 15×15; ít nhất 5 quân liên tiếp thắng, kể cả bị chặn hai đầu.
 
-- Đấu máy: hai mức, máy ưu tiên thắng và chặn nước thắng, đánh giá chuỗi quân.
-- Hai người trên cùng thiết bị.
-- Online: tạo/vào phòng bằng mã, chia sẻ liên kết, khôi phục phiên khi tải lại cùng tab, hai bên đồng ý ván mới.
-- Bàn 15×15, ít nhất 5 quân liên tiếp thắng, không áp dụng luật chặn hai đầu.
+## Triển khai
 
-## Chạy trên máy
+Đưa mã vào nhánh main của repository. Trong Settings → Pages → Source, chọn GitHub Actions. Trong Actions, chạy workflow Deploy Caro to GitHub Pages; các lần push main tiếp theo tự triển khai. URL: https://vobttruong.github.io/caro-online/ .
 
-Cài Node.js 20 trở lên rồi mở terminal tại thư mục này:
+index.html có tại thư mục gốc nên cách Pages truyền thống từ nhánh main và thư mục / (root) cũng hiển thị game. Workflow chỉ đóng gói các tệp giao diện, không công khai tệp phát triển.
 
-```sh
-npm start
-```
+## Online
 
-Mở http://localhost:3000. Kiểm tra: `npm test`.
-Hai người cùng mạng có thể dùng địa chỉ IP máy chủ, cổng 3000 (cần cho phép qua tường lửa).
+Chọn Chơi online → Tạo phòng mới, gửi liên kết mời hoặc mã 12 ký tự. Người thứ hai mở website, nhập mã rồi bấm Vào. Chủ phòng cầm X; khách cầm O. Cả hai bấm Ván mới để chơi lại. Người có mã có thể vào nếu phòng trống.
 
-## Chạy online từ repository này
+Giữ cả hai trang mở. Tải lại trang hoặc đổi chế độ kết thúc phiên online. Khi mất kết nối, tạo phòng mới. Không lưu lịch sử.
 
-Mã nguồn: https://github.com/vobttruong/caro-online
+Online dùng WebRTC và PeerJS Cloud để báo hiệu; dữ liệu ván cờ truyền giữa hai trình duyệt. Không cần Render hoặc máy chủ Node riêng. Một số mạng hoặc NAT có thể chặn kết nối; thử mạng khác. Chưa cấu hình TURN riêng nên không bảo đảm mọi mạng kết nối được. Chủ phòng kiểm tra luật và kiểm soát trạng thái: không dùng cho thi đấu có thưởng.
 
-Mở [Deploy to Render](https://render.com/deploy?repo=https://github.com/vobttruong/caro-online), đăng nhập Render và tạo dịch vụ theo cấu hình `render.yaml`. Kiểm tra gói và chi phí trước khi xác nhận. Khi dịch vụ báo Live, mở URL Render trả về để chơi cả ba chế độ. Tạo phòng rồi gửi liên kết mời cho người thứ hai.
+PeerJS 1.5.5 được lưu ở vendor/ cùng giấy phép MIT. Tài liệu: https://peerjs.com/client/faq . Không cần camera hay microphone.
 
-Phòng đang chơi sẽ mất khi dịch vụ khởi động lại. Không tăng số instance vì phòng hiện lưu trong RAM.
+## Phát triển
 
-## Đưa lên GitHub và chạy online
+Cần Node.js 20+. Không cần cài package. Chạy `npm test` và `npm run build`. Dùng máy chủ HTTP tĩnh phục vụ thư mục gốc hoặc dist/; không mở file:// vì sử dụng JavaScript modules.
 
-Tạo repository `caro-online`, rồi chạy tại thư mục dự án:
-
-```sh
-git init
-git add .
-git commit -m "Build Caro Club with AI, local and online play"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/caro-online.git
-git push -u origin main
-```
-
-Trong Render, tạo Web Service từ repository GitHub, chọn Node, Build Command `npm install --omit=dev`, Start Command `npm start`; hoặc tạo Blueprint dùng `render.yaml`. Khi triển khai xong, gửi URL dịch vụ cho bạn để chơi. Dịch vụ có thể có phí tùy gói bạn chọn.
-
-GitHub lưu mã nguồn; GitHub Pages không chạy máy chủ Node của chế độ online. Cần triển khai toàn bộ ứng dụng trên dịch vụ Node.js.
-
-## Vận hành
-
-Máy chủ xác thực bằng token ngẫu nhiên theo người chơi, kiểm tra lượt và nước đi. Không đưa token vào liên kết chia sẻ. Phòng giữ trong RAM, mất khi máy chủ khởi động lại; dùng một instance. Phòng dọn sau 2 giờ không hoạt động. Giới hạn 5.000 phòng và 400 yêu cầu/phút/IP. Dùng HTTPS ở môi trường triển khai. Nếu cần nhiều máy chủ hoặc lưu lịch sử lâu dài, cần thêm cơ sở dữ liệu và lưu phiên dùng chung. Phông chữ Google có dự phòng phông hệ thống.
+Kiểm thử online dùng truyền tải giả lập để kiểm tra giao thức và lượt đánh. Cần thử hai trình duyệt thật trên mạng thực để xác nhận WebRTC.
