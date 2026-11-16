@@ -1,0 +1,99 @@
+/* White board, violet grid and rounded blue/red marks from the reference. */
+:root {
+  --ink: #293c83;
+  --blue: #2c43a3;
+  --red: #e51b26;
+  --violet: #9834ba;
+  --line: #e6dcf0;
+  --mark-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%232c43a3' d='M73 43C88 27 98 33 113 51C127 69 139 92 151 110C168 96 179 77 195 75C209 72 221 75 213 90C203 107 182 118 168 133C184 158 205 190 216 216C223 230 194 246 185 228C173 200 157 177 143 157C119 177 93 197 77 199C62 202 54 194 66 182C83 167 112 151 125 131C108 112 86 79 72 61C66 54 68 48 73 43Z'/%3E%3C/svg%3E");
+  --mark-o: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%23e51b26' fill-rule='evenodd' d='M194 40C242 45 266 98 247 151C235 190 199 230 164 243C123 261 89 235 79 193C67 150 80 112 108 82C135 52 166 36 194 40ZM183 92C164 92 146 105 137 124C124 149 126 174 140 189C155 207 178 198 193 179C208 160 216 136 209 117C204 101 194 92 183 92Z' transform='translate(-28 0)'/%3E%3C/svg%3E");
+  color: var(--ink);
+  background: #fff;
+}
+body { background: #fff; }
+header { border-color: var(--line); height: 80px; }
+.brand { color: var(--blue); font-size: 29px; gap: 14px; }
+.brand-marks { display: flex; gap: 2px; }
+.brand-marks b { display: inline-block; width: 31px; height: 36px; }
+.brand-marks .x { background: var(--mark-x) center / contain no-repeat; }
+.brand-marks .o { background: var(--mark-o) center / contain no-repeat; }
+.tag, .eyebrow, .gameTop { color: #77718a; }
+button { border-color: #ddd6ec; }
+button:hover { background: #f3effb; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline-color: var(--violet);
+}
+main { max-width: 1240px; padding-top: 30px; }
+.intro { margin-bottom: 28px; }
+h1 { color: var(--blue); font-size: clamp(34px, 4vw, 50px); }
+h1 em { color: var(--red); }
+.intro > p:last-child { color: #77718a; }
+.layout { grid-template-columns: 280px minmax(0, 1fr); gap: 46px; }
+.modes button { background: #fff; border-color: #e0d8ef; }
+.modes button.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+.options select, .join input { background: #fff; border-color: #ddd6ec; }
+.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+.primary:hover { background: #213584; }
+.note { border-color: var(--line); color: #77718a; }
+.game {
+  background: #fff;
+  border-color: var(--line);
+  border-radius: 12px;
+  box-shadow: 0 10px 36px #593f8d08;
+  padding: 22px;
+  margin-top: -150px;
+  max-width: 680px;
+}
+.dot { background: var(--blue); }
+.player.selected { background: #f2effc; border-color: #dcd1ef; }
+.player:has(.o).selected { background: #fff0f1; border-color: #fac8ce; }
+.player b { width: 36px; height: 40px; flex: 0 0 36px; font-size: 0; }
+.player b.x { background: var(--mark-x) center / contain no-repeat; }
+.player b.o { background: var(--mark-o) center / contain no-repeat; }
+.player small, .versus { color: #80768e; }
+.board {
+  gap: 1px;
+  border: 1px solid var(--violet);
+  border-radius: 0;
+  background: var(--violet);
+}
+.cell {
+  background: #fff;
+  color: transparent;
+  font-size: 0;
+  opacity: 1;
+  min-width: 0;
+  touch-action: manipulation;
+}
+.cell:disabled { opacity: 1; }
+.cell:hover { background: #f6f0fc; }
+.cell:disabled:hover { background: #fff; }
+.cell:not(:empty)::before {
+  content: '';
+  position: absolute;
+  inset: 3%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+}
+.cell.x:not(:empty)::before { background-image: var(--mark-x); }
+.cell.o:not(:empty)::before { background-image: var(--mark-o); }
+.cell.last::after { bottom: 2px; width: 3px; height: 3px; background: var(--violet); }
+.cell.win, .cell.win:disabled:hover { background: #f0e4fb; }
+.gameBottom { color: #57506b; }
+footer { border-color: var(--line); color: #80768e; }
+dialog { color: var(--ink); background: #fff; border-color: var(--line); }
+dialog::backdrop { background: #25285b70; }
+@media (max-width: 800px) {
+  header { height: 70px; }
+  main { padding: 24px 16px 0; }
+  .layout { grid-template-columns: 1fr; gap: 22px; }
+  .game { margin-top: 0; padding: 12px; max-width: none; }
+  .cell { font-size: 0; }
+  .player b { width: 30px; height: 34px; flex-basis: 30px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cell:not(:empty)::before { animation: mark-in 130ms ease-out; }
+  @keyframes mark-in { from { transform: scale(.75); opacity: .3; } to { transform: scale(1); opacity: 1; } }
+}
