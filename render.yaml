@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: caro-online
+    runtime: node
+    buildCommand: echo "No dependencies to install"
+    startCommand: node server.js
+    healthCheckPath: /
